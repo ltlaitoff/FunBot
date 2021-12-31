@@ -1,14 +1,11 @@
-# import requests
-# from database import DataBase
+import requests
 
-# database = DataBase()
-
-# API_KEY = 'RGAPI-130d88f5-b1d5-4d5e-894f-0efd49a20fb1'
-# LOCALE = 'europe'
+API_KEY = 'RGAPI-130d88f5-b1d5-4d5e-894f-0efd49a20fb1'
+LOCALE = 'europe'
 
 
-# def get_user_info(name):
-#     return requests.get(f'https://ru.api.riotgames.com/lol/summoner/v4/summoners/by-name/{name}?api_key={API_KEY}').json()
+def get_user_info(name):
+    return requests.get(f'https://ru.api.riotgames.com/lol/summoner/v4/summoners/by-name/{name}?api_key={API_KEY}').json()
 
 
 # def get_match_info(match_id):

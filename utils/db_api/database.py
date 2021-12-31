@@ -23,3 +23,11 @@ class DataBase:
             return self.cursor.execute(
                 "SELECT * FROM users WHERE tg_id = ?", (tg_id,)
             ).fetchall()
+
+    @logger.catch
+    def update_user_lol_data(self, tg_id, lol_puuid, lol_name):
+        with self.connection:
+            return self.cursor.execute(
+                "UPDATE users SET lol_puuid = ?, lol_name = ? WHERE tg_id = ?", (
+                    lol_puuid, lol_name, tg_id)
+            ).fetchall()

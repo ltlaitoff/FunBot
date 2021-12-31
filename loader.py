@@ -1,6 +1,6 @@
 from aiogram import Bot, Dispatcher, types
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
-
+from loguru import logger
 from utils.db_api.database import DataBase
 
 from data import config

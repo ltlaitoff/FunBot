@@ -1,4 +1,3 @@
-import data
 from loader import database, logger, dp, api
 from datetime import datetime
 

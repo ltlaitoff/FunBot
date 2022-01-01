@@ -8,8 +8,13 @@ def get_user_info(name):
     return requests.get(f'https://ru.api.riotgames.com/lol/summoner/v4/summoners/by-name/{name}?api_key={API_KEY}').json()
 
 
-# def get_match_info(match_id):
-#     return requests.get(f'https://{LOCALE}.api.riotgames.com/lol/match/v5/matches/{match_id}?api_key={API_KEY}').json()
+def get_user_matchs_list(puuid):
+    return requests.get(
+        f'https://{LOCALE}.api.riotgames.com/lol/match/v5/matches/by-puuid/{puuid}/ids?start=0&count=40&api_key={API_KEY}').json()
+
+
+def get_match_info(match_id):
+    return requests.get(f'https://{LOCALE}.api.riotgames.com/lol/match/v5/matches/{match_id}?api_key={API_KEY}').json()
 
 
 # def add_new_user(name):

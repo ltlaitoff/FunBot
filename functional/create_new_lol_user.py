@@ -1,6 +1,8 @@
 from loader import database, logger
 from api.api import get_user_info
 
+from functional.update_user_mathes import update_user_mathes
+
 
 def create_new_lol_user(tg_id, text):
     user_info = get_user_info(text)
@@ -14,4 +16,4 @@ def create_new_lol_user(tg_id, text):
     database.update_user_lol_data(
         tg_id, user_info.get('puuid'), user_info.get('name'))
 
-    return "Ваши данные успешно добавленны"
+    return update_user_mathes(tg_id) + "\nВаши данные успешно добавленны"

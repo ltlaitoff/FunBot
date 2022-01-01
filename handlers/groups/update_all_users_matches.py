@@ -9,4 +9,4 @@ from filters import IsGroup
 
 @dp.message_handler(IsGroup(), Command("update_all_users_matches"))
 async def update_all_users(message: types.Message):
-    await message.answer(update_all_users_matches())
+    await update_all_users_matches(message.chat.id)

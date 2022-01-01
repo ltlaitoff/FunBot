@@ -5,7 +5,7 @@ from loader import database, logger, dp, api
 from functional.add_new_record_in_history import add_new_record_in_history
 
 
-async def update_user_mathes(tg_id, chat_id):
+async def update_user_mathes(tg_id, chat_id, return_type='tg'):
     user_info = database.users.get_by_tg_id(tg_id)
     user_id = user_info.get('id')
     puuid = user_info.get('lol_puuid')
@@ -32,18 +32,24 @@ async def update_user_mathes(tg_id, chat_id):
 
         matches.append([*match_data.values()])
 
-    await send_matches_message(chat_id, matches)
+    if (return_type == 'all'):
+        return create_matches_message(matches, return_type)
+
+    await dp.bot.send_message(chat_id, create_matches_message(matches))
 
 
-async def send_matches_message(chat_id, matches):
+def create_matches_message(matches, return_type):
     if (len(matches) == 0):
-        return None
+        return ''
 
-    message = 'Matches(date, champion, KDA):\n'
+    message = ''
+    if (return_type != 'all'):
+        message = 'Matches(date, champion, KDA):\n'
+
     for item in matches:
         message += transfrom_to_send_user(*item)
 
-    await dp.bot.send_message(chat_id, message)
+    return message
 
 
 def transfrom_to_send_user(date, champion, kills, deaths, assists):

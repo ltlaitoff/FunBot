@@ -32,6 +32,19 @@ class Users:
 
     # === Get ===
     @logger.catch
+    def get_all(self):
+        sql = f"SELECT * FROM users"
+
+        with self.connection:
+            users = self.cursor.execute(sql).fetchall()
+
+        result_users = []
+        for user in users:
+            result_users.append(self.__transform_user_data_to_dict(user))
+
+        return result_users
+
+    @logger.catch
     def get_by_tg_id(self, tg_id):
         return self.__get('tg_id', tg_id)
 

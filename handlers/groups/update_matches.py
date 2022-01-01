@@ -8,6 +8,6 @@ from functional.update_user_mathes import update_user_mathes
 from filters import IsGroup
 
 
-@dp.message_handler(Command("update_matches"))
+@dp.message_handler(IsGroup(), Command("update_matches"))
 async def update_matches(message: types.Message):
     await message.answer(update_user_mathes(message.from_user.id))

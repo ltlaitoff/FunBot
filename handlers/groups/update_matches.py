@@ -5,6 +5,7 @@ from aiogram.dispatcher import FSMContext
 from aiogram import types
 
 from functional.update_user_mathes import update_user_mathes
+from filters import IsGroup
 
 
 @dp.message_handler(Command("update_matches"))

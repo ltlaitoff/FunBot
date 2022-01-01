@@ -31,12 +31,15 @@ class Users:
         self.cursor = cursor
 
     # === Get ===
+    @logger.catch
     def get_by_tg_id(self, tg_id):
         return self.__get('tg_id', tg_id)
 
+    @logger.catch
     def get_by_lol_puuid(self, lol_puuid):
         return self.__get('lol_puuid', lol_puuid)
 
+    @logger.catch
     def __get(self, type, value):
         sql = f"SELECT * FROM users WHERE {type} = {value}"
         with self.connection:
@@ -47,6 +50,7 @@ class Users:
 
         return self.__transform_user_data_to_dict(user[0])
 
+    @logger.catch
     def __transform_user_data_to_dict(self, user_data):
         return {
             'id': user_data[0],
@@ -59,6 +63,7 @@ class Users:
         }
 
     # === Add ===
+    @logger.catch
     def add(self, tg_id=None, tg_name=None, lol_puuid=None, lol_name=None, poull_ups=0, coefficient=1):
         if (tg_id != None):
             if (self.get_by_tg_id(tg_id) != None):
@@ -87,24 +92,31 @@ class Users:
         return 0
 
     # === Update ===
+    @logger.catch
     def update_tg_id(self, user_id, tg_id):
         return self.__update('tg_id', user_id, tg_id)
 
+    @logger.catch
     def update_tg_name(self, user_id, tg_name):
         return self.__update('tg_name', user_id, tg_name)
 
+    @logger.catch
     def update_lol_puuid(self, user_id, lol_puuid):
         return self.__update('lol_puuid', user_id, lol_puuid)
 
+    @logger.catch
     def update_lol_name(self, user_id, lol_name):
         return self.__update('lol_name', user_id, lol_name)
 
+    @logger.catch
     def update_pull_ups(self, user_id, pull_ups):
         return self.__update('pull_ups', user_id, pull_ups)
 
+    @logger.catch
     def update_coefficient(self, user_id, coefficient):
         return self.__update('coefficient', user_id, coefficient)
 
+    @logger.catch
     def __update(self, value_key, user_id, value):
         if (type(value) == str):
             value = '"' + value + '"'
@@ -117,6 +129,7 @@ class Users:
         return 0
 
     # === Delete ===
+    @logger.catch
     def __delete(self, value_key, value):
         if (type(value) == str):
             value = '"' + value + '"'
@@ -128,9 +141,11 @@ class Users:
 
         return 0
 
+    @logger.catch
     def delete_by_tg_id(self, tg_id):
         return self.__delete('tg_id', tg_id)
 
+    @logger.catch
     def delete_by_lol_puuid(self, lol_puuid):
         return self.__delete('lol_puuid', lol_puuid)
 
@@ -143,9 +158,11 @@ class History():
         self.cursor = cursor
 
     # === GET ===
+    @logger.catch
     def get_by_user_id(self, user_id):
         return self.__get('user_id', user_id)
 
+    @logger.catch
     def __get(self, value_key, value):
         if (type(value) == str):
             value = '"' + value + '"'
@@ -160,6 +177,7 @@ class History():
 
         return self.__transform_data_items_to_dicts(data)
 
+    @logger.catch
     def __transform_data_items_to_dicts(self, data):
         result = []
         for item in data:
@@ -175,6 +193,7 @@ class History():
         return result
 
     # === ADD ===
+    @logger.catch
     def add(self, user_id, date, value, current_coef, result_pull_ups, global_pull_ups):
 
         if (type(date) != datetime):
@@ -194,12 +213,15 @@ class Matchs():
         self.cursor = cursor
 
     # === GET ===
+    @logger.catch
     def get_by_user_id(self, user_id):
         return self.__get('user_id', user_id)
 
+    @logger.catch
     def get_by_match_id(self, match_id):
         return self.__get('match_id', match_id)
 
+    @logger.catch
     def __get(self, value_key, value):
         if (type(value) == str):
             value = '"' + value + '"'
@@ -214,6 +236,7 @@ class Matchs():
 
         return self.__transform_data_items_to_dicts(data)
 
+    @logger.catch
     def __transform_data_items_to_dicts(self, data):
         result = []
         for item in data:
@@ -230,6 +253,7 @@ class Matchs():
         return result
 
     # === ADD ===
+    @logger.catch
     def add(self, user_id, match_id, date, champion, kills, deaths, assists):
 
         if (type(date) != datetime):

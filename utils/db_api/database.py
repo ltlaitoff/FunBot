@@ -1,5 +1,6 @@
 from loguru import logger
 import sqlite3
+from datetime import datetime
 
 
 class DataBase:
@@ -12,6 +13,10 @@ class DataBase:
     @property
     def users(self):
         return Users(self.connection, self.cursor)
+
+    @property
+    def history(self):
+        return History(self.connection, self.cursor)
 
 
 class Users:
@@ -105,8 +110,57 @@ class Users:
         self.__delete('lol_puuid', lol_puuid)
 
 
+class History():
+    @logger.catch
+    def __init__(self, connection, cursor):
+        """Подключение и курсор"""
+        self.connection = connection
+        self.cursor = cursor
+
+    # === GET ===
+    def get_by_user_id(self, user_id):
+        return self.__get('user_id', user_id)
+
+    def __get(self, type, value):
+        sql = f"SELECT * FROM history WHERE {type} = {value}"
+
+        with self.connection:
+            data = self.cursor.execute(sql).fetchall()
+
+        if (data == []):
+            return None
+
+        return self.__transform_data_items_to_dicts(data)
+
+    def __transform_data_items_to_dicts(self, data):
+        result = []
+        for item in data:
+            result.append({
+                "id": item[0],
+                "user_id": item[1],
+                "data": datetime.strptime(item[2], "%d/%m/%Y %H:%M:%S"),
+                "value": item[3],
+                "current_coef": item[4],
+                "result_pull_ups": item[5],
+                "global_pull_ups": item[6]
+            })
+        return result
+
+    # === ADD ===
+    def add(self, user_id, date, value, current_coef, result_pull_ups, global_pull_ups):
+
+        if (type(date) != datetime):
+            date = datetime.strptime(date, "%d/%m/%Y %H:%M:%S")
+
+        sql = f"INSERT INTO history VALUES ({user_id}, {date}, {value}, {current_coef}, {result_pull_ups}, {global_pull_ups})"
+
+        with self.connection:
+            self.cursor.execute(sql)
+
+
 database = DataBase()
 print(database.users.get_by_tg_id(906687130))
+print(database.history.get_by_user_id(1))
 
 # @logger.catch
 # def add_new_telegram_user(self, tg_id, tg_name) -> None:

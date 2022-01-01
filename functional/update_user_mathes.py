@@ -1,7 +1,5 @@
-from re import purge
 from loader import database, logger, dp, api
 
-# from functional.parse_data_from_match_info import parse_data_from_match_info
 from functional.add_new_record_in_history import add_new_record_in_history
 
 

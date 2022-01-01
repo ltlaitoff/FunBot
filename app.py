@@ -20,7 +20,7 @@ async def on_startup(dispatcher):
 
 async def update_all_users_matches_loop():
     while True:
-        await asyncio.sleep(20)
+        await asyncio.sleep(180)
         await update_all_users_matches(config.CHAT)
 
 if __name__ == '__main__':

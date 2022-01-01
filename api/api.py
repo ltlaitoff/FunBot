@@ -1,5 +1,5 @@
 import requests
-from data.config import config
+from loader import config
 
 
 class RIOT_API:

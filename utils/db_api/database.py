@@ -61,19 +61,21 @@ class Users:
     # === Add ===
     def add(self, tg_id=None, tg_name=None, lol_puuid=None, lol_name=None, poull_ups=0, coefficient=1):
         if (tg_id != None):
-            if (self.get_by_tg_id(tg_id) != []):
+            if (self.get_by_tg_id(tg_id) != None):
                 logger.error('adding duplicate user')
                 return
         elif (lol_puuid != None):
-            if (self.get_by_lol_puuid(lol_puuid) != []):
+            if (self.get_by_lol_puuid(lol_puuid) != None):
                 logger.error('adding duplicate user')
                 return
 
         with self.connection:
             self.cursor.execute(
-                "INSERT INTO users(tg_id, tg_name, lol_puuid, lol_name, poull_ups, coefficient) VALUES (?, ?, ?, ?, ?, ?)", (
+                "INSERT INTO users(tg_id, tg_name, lol_puuid, lol_name, pull_ups, coefficient) VALUES (?, ?, ?, ?, ?, ?)", (
                     tg_id, tg_name, lol_puuid, lol_name, poull_ups, coefficient)
             )
+
+        return 0
 
     # === Update ===
     def update_tg_id(self, user_id,  tg_id):

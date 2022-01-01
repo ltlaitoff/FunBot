@@ -256,13 +256,19 @@ class Matchs():
     @logger.catch
     def add(self, user_id, match_id, date, champion, kills, deaths, assists):
 
-        if (type(date) != datetime):
-            date = datetime.strptime(date, "%d/%m/%Y %H:%M:%S")
+        if (type(match_id) == str):
+            match_id = '"' + match_id + '"'
+
+        if (type(date) == datetime):
+            date = datetime.strftime(date, "%d/%m/%Y %H:%M:%S")
+
+        date = '"' + date + '"'
 
         if (type(champion) == str):
             champion = '"' + champion + '"'
 
-        sql = f"INSERT INTO matchs VALUES ({user_id}, {match_id}, {date}, {champion}, {kills}, {deaths}, {assists})"
+        sql = f'''INSERT INTO matchs(user_id, match_id, date, champion, kills, deaths, assists) 
+                VALUES ({user_id}, {match_id}, {date}, {champion}, {kills}, {deaths}, {assists})'''
 
         with self.connection:
             self.cursor.execute(sql)

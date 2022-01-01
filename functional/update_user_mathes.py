@@ -1,56 +1,47 @@
-from loader import database, logger, dp
-# from api.api import get_user_matchs_list, get_match_info
+from re import purge
+from loader import database, logger, dp, api
 
-from functional.parse_data_from_match_info import parse_data_from_match_info
-from functional.add_new_record_in_history import add_new_record_in_history
-
-
-def update_user_mathes(tg_id):
-    logger.critical('update_user_matches')
-#     user_info = database.get_all_by_tg_id(tg_id)[0]
-#     user_id = user_info[0]
-#     puuid = user_info[3]
-#     last_match_id = database.get_last_user_match(user_id)
-
-#     match_list = get_user_matchs_list(puuid)
-
-#     array_on_send_user = []
-#     if (last_match_id == []):
-#         match_data = get_match_info(match_list[0])
-#         match_structuring_data = parse_data_from_match_info(match_data, puuid)
-#         database.add_new_match(
-#             user_id, match_list[0], *match_structuring_data.values())
-#         array_on_send_user.append(list(match_structuring_data.values()))
-
-#     result = []
-#     for match_id in match_list:
-#         if (match_id == last_match_id[-1][0]):
-#             break
-
-#         match_data = get_match_info(match_id)
-#         match_structuring_data = parse_data_from_match_info(match_data, puuid)
-
-#         result.append([user_id, match_id, *
-#                       match_structuring_data.values()])
-#         array_on_send_user.append(list(match_structuring_data.values()))
-
-#     result.reverse()
-
-#     for item in result:
-#         database.add_new_match(*item)
-#         add_new_record_in_history(user_id, item[2], item[5])
-
-#     print(array_on_send_user)
-
-#     if (array_on_send_user != []):
-#         send_result(array_on_send_user)
-
-#     return ''
+# from functional.parse_data_from_match_info import parse_data_from_match_info
+# from functional.add_new_record_in_history import add_new_record_in_history
 
 
-# async def send_result(array_on_send_user):
-#     result = '''Matches:\n'''
-#     for item in array_on_send_user:
-#         result += f'''{item[0]} | {item[1]} | {item[2]} | {item[3]} | {item[4]}\n'''
+async def update_user_mathes(tg_id, chat_id):
+    user_info = database.users.get_by_tg_id(tg_id)
+    user_id = user_info.get('id')
+    puuid = user_info.get('lol_puuid')
 
-#     await dp.bot.send_message(906687130, "Бот Запущен")
+    user_database_mathes = database.matchs.get_by_user_id(user_id)
+    user_api_mathes = api.get_user_matchs_list(puuid)
+
+    if (user_database_mathes != None):
+        last_match_id = user_database_mathes[-1].get('match_id')
+    else:
+        last_match_id = user_api_mathes[1]
+
+    matches = []
+
+    for match_id in user_api_mathes:
+        if (match_id == last_match_id):
+            break
+
+        match_data = api.get_match_info(match_id, puuid)
+        database.matchs.add(user_id, match_id, *match_data.values())
+
+        matches.append([*match_data.values()])
+
+    await send_matches_message(chat_id, matches)
+
+
+async def send_matches_message(chat_id, matches):
+    if (len(matches) == 0):
+        return None
+
+    message = 'Matches(date, champion, KDA):\n'
+    for item in matches:
+        message += transfrom_to_send_user(*item)
+
+    await dp.bot.send_message(chat_id, message)
+
+
+def transfrom_to_send_user(date, champion, kills, deaths, assists):
+    return f'{date}, {champion} -> {kills} | {deaths} | {assists}\n'

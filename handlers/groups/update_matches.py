@@ -9,4 +9,4 @@ from filters import IsGroup
 
 @dp.message_handler(IsGroup(), Command("update_matches"))
 async def update_matches(message: types.Message):
-    await message.answer(update_user_mathes(message.from_user.id))
+    await update_user_mathes(message.from_user.id, message.chat.id)

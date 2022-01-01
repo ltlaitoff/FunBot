@@ -1,4 +1,3 @@
-from functional.create_new_lol_user import create_new_lol_user
 from loader import dp, database, logger
 from aiogram.dispatcher.filters import Command
 from aiogram.dispatcher import FSMContext
@@ -10,4 +9,4 @@ from filters import IsGroup
 
 @dp.message_handler(IsGroup(), Command("update_all_users_matches"))
 async def update_all_users(message: types.Message):
-    await message.answer(update_all_users_matches())
+    await update_all_users_matches(message.chat.id)

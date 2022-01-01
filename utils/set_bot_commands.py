@@ -12,5 +12,8 @@ async def set_default_commands(dp):
             types.BotCommand("update_all_users_matches",
                              "Обновить матчи всех пользователей"),
             types.BotCommand("update_matches", "Обновить свои матчи"),
+            types.BotCommand("history", "Посмотреть историю"),
+            types.BotCommand("matches", "Посмотреть матчи"),
+            types.BotCommand("show_pull_ups", "Посмотреть подтягивания"),
         ]
     )

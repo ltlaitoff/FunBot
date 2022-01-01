@@ -1,9 +1,12 @@
 from aiogram import Dispatcher
+from loguru import logger
 
-from loader import dp
-# from .is_admin import AdminFilter
+from .chat_filters import IsGroup
+from .chat_filters import IsPrivate
 
 
-if __name__ == "filters":
-    # dp.filters_factory.bind(AdminFilter)
-    pass
+def setup(dp: Dispatcher):
+    logger.info("Подключение filters...")
+
+    dp.filters_factory.bind(IsGroup)
+    dp.filters_factory.bind(IsPrivate)

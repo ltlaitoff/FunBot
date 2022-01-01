@@ -40,6 +40,10 @@ class Users:
         return self.__get('lol_puuid', lol_puuid)
 
     @logger.catch
+    def get_by_user_id(self, user_id):
+        return self.__get('id', user_id)
+
+    @logger.catch
     def __get(self, type, value):
         sql = f"SELECT * FROM users WHERE {type} = {value}"
         with self.connection:
@@ -196,10 +200,13 @@ class History():
     @logger.catch
     def add(self, user_id, date, value, current_coef, result_pull_ups, global_pull_ups):
 
-        if (type(date) != datetime):
-            date = datetime.strptime(date, "%d/%m/%Y %H:%M:%S")
+        if (type(date) == datetime):
+            date = datetime.strftime(date, "%d/%m/%Y %H:%M:%S")
 
-        sql = f"INSERT INTO history VALUES ({user_id}, {date}, {value}, {current_coef}, {result_pull_ups}, {global_pull_ups})"
+        date = '"' + date + '"'
+
+        sql = f'''INSERT INTO history(user_id, date, value, current_coef, result_pull_ups, global_pull_ups) 
+        VALUES ({user_id}, {date}, {value}, {current_coef}, {result_pull_ups}, {global_pull_ups})'''
 
         with self.connection:
             self.cursor.execute(sql)

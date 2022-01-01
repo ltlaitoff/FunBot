@@ -1,14 +1,17 @@
 from loader import database, logger
-# from api.api import get_user_matchs_list, get_match_info
 
 
-def add_new_record_in_history(user_id, data, value):
-    logger.critical('add_new_record_in_history')
-    # user_info = database.get_all_by_user_id(user_id)
-    # current_coef = user_info[0][6]
-    # result_pull_ups = value * current_coef
-    # global_pull_ups = user_info[0][5] + result_pull_ups
+def add_new_record_in_history(user_id, date, value):
+    user_info = database.users.get_by_user_id(user_id)
 
-    # database.add_new_record_in_history(
-    #     user_id, data, value, current_coef, result_pull_ups, global_pull_ups)
-    # database.update_user_pull_ups(user_id, global_pull_ups)
+    if (user_info == None):
+        logger.critical(f'not find user by user_id {user_id} in database')
+        return
+
+    current_coef = user_info.get('coefficient')
+    result_pull_ups = value * current_coef
+    global_pull_ups = user_info.get('pull_ups') + result_pull_ups
+
+    database.history.add(
+        user_id, date, value, current_coef, result_pull_ups, global_pull_ups)
+    database.users.update_pull_ups(user_id, global_pull_ups)

@@ -2,7 +2,7 @@ from re import purge
 from loader import database, logger, dp, api
 
 # from functional.parse_data_from_match_info import parse_data_from_match_info
-# from functional.add_new_record_in_history import add_new_record_in_history
+from functional.add_new_record_in_history import add_new_record_in_history
 
 
 async def update_user_mathes(tg_id, chat_id):
@@ -26,6 +26,9 @@ async def update_user_mathes(tg_id, chat_id):
 
         match_data = api.get_match_info(match_id, puuid)
         database.matchs.add(user_id, match_id, *match_data.values())
+
+        add_new_record_in_history(
+            user_id, match_data.get('date'), match_data.get('deaths'))
 
         matches.append([*match_data.values()])
 

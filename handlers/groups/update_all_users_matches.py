@@ -1,4 +1,3 @@
-from functional.create_new_lol_user import create_new_lol_user
 from loader import dp, database, logger
 from aiogram.dispatcher.filters import Command
 from aiogram.dispatcher import FSMContext

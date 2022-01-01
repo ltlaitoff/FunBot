@@ -69,6 +69,15 @@ class Users:
                 logger.error('adding duplicate user')
                 return
 
+        if (type(tg_name) == str):
+            tg_name = '"' + tg_name + '"'
+
+        if (type(lol_puuid) == str):
+            lol_puuid = '"' + lol_puuid + '"'
+
+        if (type(lol_name) == str):
+            lol_name = '"' + lol_name + '"'
+
         with self.connection:
             self.cursor.execute(
                 "INSERT INTO users(tg_id, tg_name, lol_puuid, lol_name, pull_ups, coefficient) VALUES (?, ?, ?, ?, ?, ?)", (
@@ -78,42 +87,52 @@ class Users:
         return 0
 
     # === Update ===
-    def update_tg_id(self, user_id,  tg_id):
-        self.__update('tg_id', user_id, tg_id)
+    def update_tg_id(self, user_id, tg_id):
+        return self.__update('tg_id', user_id, tg_id)
 
     def update_tg_name(self, user_id, tg_name):
-        self.__update('tg_name', user_id, tg_name)
+        return self.__update('tg_name', user_id, tg_name)
 
     def update_lol_puuid(self, user_id, lol_puuid):
-        self.__update('lol_puuid', user_id, lol_puuid)
+        return self.__update('lol_puuid', user_id, lol_puuid)
 
     def update_lol_name(self, user_id, lol_name):
-        self.__update('lol_name', user_id, lol_name)
+        return self.__update('lol_name', user_id, lol_name)
 
     def update_pull_ups(self, user_id, pull_ups):
-        self.__update('pull_ups', user_id, pull_ups)
+        return self.__update('pull_ups', user_id, pull_ups)
 
     def update_coefficient(self, user_id, coefficient):
-        self.__update('coefficient', user_id, coefficient)
+        return self.__update('coefficient', user_id, coefficient)
 
-    def __update(self, type, user_id, value):
-        sql = f"UPDATE users SET {type} = {value} WHERE id = {user_id}"
+    def __update(self, value_key, user_id, value):
+        if (type(value) == str):
+            value = '"' + value + '"'
+
+        sql = f"UPDATE users SET {value_key} = {value} WHERE id = {user_id}"
 
         with self.connection:
             self.cursor.execute(sql)
+
+        return 0
 
     # === Delete ===
-    def __delete(self, type, value):
-        sql = f"DELETE FROM users WHERE {type} = {value}"
+    def __delete(self, value_key, value):
+        if (type(value) == str):
+            value = '"' + value + '"'
+
+        sql = f"DELETE FROM users WHERE {value_key} = {value}"
 
         with self.connection:
             self.cursor.execute(sql)
 
+        return 0
+
     def delete_by_tg_id(self, tg_id):
-        self.__delete('tg_id', tg_id)
+        return self.__delete('tg_id', tg_id)
 
     def delete_by_lol_puuid(self, lol_puuid):
-        self.__delete('lol_puuid', lol_puuid)
+        return self.__delete('lol_puuid', lol_puuid)
 
 
 class History():
@@ -127,8 +146,11 @@ class History():
     def get_by_user_id(self, user_id):
         return self.__get('user_id', user_id)
 
-    def __get(self, type, value):
-        sql = f"SELECT * FROM history WHERE {type} = {value}"
+    def __get(self, value_key, value):
+        if (type(value) == str):
+            value = '"' + value + '"'
+
+        sql = f"SELECT * FROM history WHERE {value_key} = {value}"
 
         with self.connection:
             data = self.cursor.execute(sql).fetchall()
@@ -178,8 +200,11 @@ class Matchs():
     def get_by_match_id(self, match_id):
         return self.__get('match_id', match_id)
 
-    def __get(self, type, value):
-        sql = f"SELECT * FROM matchs WHERE {type} = {value}"
+    def __get(self, value_key, value):
+        if (type(value) == str):
+            value = '"' + value + '"'
+
+        sql = f"SELECT * FROM matchs WHERE {value_key} = {value}"
 
         with self.connection:
             data = self.cursor.execute(sql).fetchall()
@@ -209,6 +234,9 @@ class Matchs():
 
         if (type(date) != datetime):
             date = datetime.strptime(date, "%d/%m/%Y %H:%M:%S")
+
+        if (type(champion) == str):
+            champion = '"' + champion + '"'
 
         sql = f"INSERT INTO matchs VALUES ({user_id}, {match_id}, {date}, {champion}, {kills}, {deaths}, {assists})"
 

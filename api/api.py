@@ -1,14 +1,19 @@
 import requests
-from loader import config
 
 
 class RIOT_API:
-    def __init__(self):
+    def __init__(self, config):
         self.API_KEY = config.RIOT_API
         self.LOCALE = config.RIOT_LOCALE
 
     def get_user_info_by_name(self, name):
-        return requests.get(f'https://ru.api.riotgames.com/lol/summoner/v4/summoners/by-name/{name}?api_key={self.API_KEY}').json()
+        user_info = requests.get(
+            f'https://ru.api.riotgames.com/lol/summoner/v4/summoners/by-name/{name}?api_key={self.API_KEY}').json()
+
+        if (user_info.get('status') != None):
+            return None
+
+        return user_info
 
     def get_user_matchs_list(self, puuid):
         return requests.get(

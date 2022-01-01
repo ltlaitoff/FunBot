@@ -18,6 +18,10 @@ class DataBase:
     def history(self):
         return History(self.connection, self.cursor)
 
+    @property
+    def matchs(self):
+        return Matchs(self.connection, self.cursor)
+
 
 class Users:
     @logger.catch
@@ -138,7 +142,7 @@ class History():
             result.append({
                 "id": item[0],
                 "user_id": item[1],
-                "data": datetime.strptime(item[2], "%d/%m/%Y %H:%M:%S"),
+                "date": datetime.strptime(item[2], "%d/%m/%Y %H:%M:%S"),
                 "value": item[3],
                 "current_coef": item[4],
                 "result_pull_ups": item[5],
@@ -158,88 +162,53 @@ class History():
             self.cursor.execute(sql)
 
 
-database = DataBase()
-print(database.users.get_by_tg_id(906687130))
-print(database.history.get_by_user_id(1))
+class Matchs():
+    @logger.catch
+    def __init__(self, connection, cursor):
+        """Подключение и курсор"""
+        self.connection = connection
+        self.cursor = cursor
 
-# @logger.catch
-# def add_new_telegram_user(self, tg_id, tg_name) -> None:
-#     if (self.get_all_by_tg_id(tg_id) == []):
-#         with self.connection:
-#             self.cursor.execute(
-#                 "INSERT INTO users(tg_id, tg_name) VALUES (?, ?)", (tg_id, tg_name)
-#             )
+    # === GET ===
+    def get_by_user_id(self, user_id):
+        return self.__get('user_id', user_id)
 
-# @logger.catch
-# def get_all_by_tg_id(self, tg_id):
-#     with self.connection:
-#         return self.cursor.execute(
-#             "SELECT * FROM users WHERE tg_id = ?", (tg_id,)
-#         ).fetchall()
+    def get_by_match_id(self, match_id):
+        return self.__get('match_id', match_id)
 
-# @logger.catch
-# def get_all_by_user_id(self, user_id):
-#     with self.connection:
-#         return self.cursor.execute(
-#             "SELECT * FROM users WHERE id = ?", (user_id,)
-#         ).fetchall()
+    def __get(self, type, value):
+        sql = f"SELECT * FROM matchs WHERE {type} = {value}"
 
-# @logger.catch
-# def get_all_by_tg_id(self, tg_id):
-#     with self.connection:
-#         return self.cursor.execute(
-#             "SELECT * FROM users WHERE tg_id = ?", (tg_id,)
-#         ).fetchall()
+        with self.connection:
+            data = self.cursor.execute(sql).fetchall()
 
-# @logger.catch
-# def update_user_lol_data(self, tg_id, lol_puuid, lol_name):
-#     with self.connection:
-#         return self.cursor.execute(
-#             "UPDATE users SET lol_puuid = ?, lol_name = ? WHERE tg_id = ?", (
-#                 lol_puuid, lol_name, tg_id)
-#         )
+        if (data == []):
+            return None
 
-# @logger.catch
-# def get_user_id_by_puuid(self, puuid):
-#     with self.connection:
-#         return self.cursor.execute(
-#             "SELECT id FROM users WHERE lol_puuid = ?", (puuid,)
-#         ).fetchall()
+        return self.__transform_data_items_to_dicts(data)
 
-# @logger.catch
-# def get_last_user_match(self, user_id):
-#     with self.connection:
-#         return self.cursor.execute(
-#             "SELECT match_id FROM matchs WHERE user_id = ?", (user_id,)
-#         ).fetchall()
+    def __transform_data_items_to_dicts(self, data):
+        result = []
+        for item in data:
+            result.append({
+                "id": item[0],
+                "user_id": item[1],
+                "match_id": item[2],
+                "date": datetime.strptime(item[3], "%d/%m/%Y %H:%M:%S"),
+                "champion": item[4],
+                "kills": item[5],
+                "deaths": item[6],
+                "assists": item[7]
+            })
+        return result
 
-# @logger.catch
-# def add_new_match(self, user_id, match_id, date, champion, kills, deaths, assists) -> None:
-#     with self.connection:
-#         self.cursor.execute(
-#             "INSERT INTO matchs(user_id, match_id, date, champion, kills, deaths, assists) VALUES (?, ?, ?, ?, ?, ?, ?)", (
-#                 user_id, match_id, date, champion, kills, deaths, assists)
-#         )
+    # === ADD ===
+    def add(self, user_id, match_id, date, champion, kills, deaths, assists):
 
-# @logger.catch
-# def add_new_record_in_history(self, user_id, data, value, current_coef, result_pull_ups, global_pull_ups) -> None:
-#     with self.connection:
-#         self.cursor.execute(
-#             "INSERT INTO history(user_id, data, value, current_coef, result_pull_ups, global_pull_ups) VALUES (?, ?, ?, ?, ?, ?)", (
-#                 user_id, data, value, current_coef, result_pull_ups, global_pull_ups)
-#         )
+        if (type(date) != datetime):
+            date = datetime.strptime(date, "%d/%m/%Y %H:%M:%S")
 
+        sql = f"INSERT INTO matchs VALUES ({user_id}, {match_id}, {date}, {champion}, {kills}, {deaths}, {assists})"
 
-@logger.catch
-def update_user_pull_ups(self, user_id, pull_ups) -> None:
-    with self.connection:
-        self.cursor.execute(
-            "UPDATE users SET pull_ups = ?", (pull_ups,)
-        )
-
-# @logger.catch
-# def get_all_users(self):
-#     with self.connection:
-#         return self.cursor.execute(
-#             "SELECT * FROM users"
-#         ).fetchall()
+        with self.connection:
+            self.cursor.execute(sql)

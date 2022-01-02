@@ -17,6 +17,6 @@ def did(tg_id, value):
         global_pull_ups = 0
 
     database.history.add(user_id, date, value, current_coef,
-                         result_pull_ups, global_pull_ups)
+                         result_pull_ups, global_pull_ups, 'USER')
     database.users.update_pull_ups(user_id, global_pull_ups)
     return 'Подтягивания успешно убраны'

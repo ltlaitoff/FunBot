@@ -10,7 +10,7 @@ from functional.did import did
 @dp.message_handler(IsGroup(), Command("did"))
 async def did_handler(message: types.Message):
     args = message.get_args()
-    if (args == ''):
+    if (args == '' or args.isdigit() == False):
         await message.reply('Введите корректное значение')
         return
 

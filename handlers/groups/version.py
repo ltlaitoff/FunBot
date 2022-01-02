@@ -10,3 +10,8 @@ from filters import IsGroup
 @dp.message_handler(IsGroup(), Command("version"))
 async def update_matches(message: types.Message):
     await message.answer('Current version: v' + config.VERSION)
+
+
+@dp.message_handler(IsGroup(), Command("changes"))
+async def update_matches(message: types.Message):
+    await message.answer(config.CHANGES)

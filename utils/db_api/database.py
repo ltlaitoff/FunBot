@@ -5,30 +5,32 @@ from datetime import datetime
 
 class DataBase:
     @logger.catch
-    def __init__(self):
+    def __init__(self, DATE_FORMAT):
         """Подключение и курсор"""
         self.connection = sqlite3.connect("utils/db_api/db.db")
         self.cursor = self.connection.cursor()
+        self.DATE_FORMAT = DATE_FORMAT
 
     @property
     def users(self):
-        return Users(self.connection, self.cursor)
+        return Users(self.connection, self.cursor, self.DATE_FORMAT)
 
     @property
     def history(self):
-        return History(self.connection, self.cursor)
+        return History(self.connection, self.cursor, self.DATE_FORMAT)
 
     @property
     def matchs(self):
-        return Matchs(self.connection, self.cursor)
+        return Matchs(self.connection, self.cursor, self.DATE_FORMAT)
 
 
 class Users:
     @logger.catch
-    def __init__(self, connection, cursor):
+    def __init__(self, connection, cursor, DATE_FORMAT):
         """Подключение и курсор"""
         self.connection = connection
         self.cursor = cursor
+        self.DATE_FORMAT = DATE_FORMAT
 
     # === Get ===
     @logger.catch
@@ -169,10 +171,11 @@ class Users:
 
 class History():
     @logger.catch
-    def __init__(self, connection, cursor):
+    def __init__(self, connection, cursor, DATE_FORMAT):
         """Подключение и курсор"""
         self.connection = connection
         self.cursor = cursor
+        self.DATE_FORMAT = DATE_FORMAT
 
     # === GET ===
     @logger.catch
@@ -201,7 +204,7 @@ class History():
             result.append({
                 "id": item[0],
                 "user_id": item[1],
-                "date": datetime.strptime(item[2], "%d/%m/%Y %H:%M:%S"),
+                "date": datetime.strptime(item[2], self.DATE_FORMAT),
                 "value": item[3],
                 "current_coef": item[4],
                 "result_pull_ups": item[5],
@@ -211,15 +214,15 @@ class History():
         return result
 
     # === ADD ===
-    @logger.catch
+    @ logger.catch
     def add(self, user_id, date, value, current_coef, result_pull_ups, global_pull_ups, record_type="GAME"):
 
         if (type(date) == datetime):
-            date = datetime.strftime(date, "%d/%m/%Y %H:%M:%S")
+            date = datetime.strftime(date, self.DATE_FORMAT)
 
         date = '"' + date + '"'
 
-        sql = f'''INSERT INTO history(user_id, date, value, current_coef, result_pull_ups, global_pull_ups, record_type) 
+        sql = f'''INSERT INTO history(user_id, date, value, current_coef, result_pull_ups, global_pull_ups, record_type)
         VALUES ({user_id}, {date}, {value}, {current_coef}, {result_pull_ups}, {global_pull_ups}, {record_type})'''
 
         with self.connection:
@@ -227,22 +230,23 @@ class History():
 
 
 class Matchs():
-    @logger.catch
-    def __init__(self, connection, cursor):
+    @ logger.catch
+    def __init__(self, connection, cursor, DATE_FORMAT):
         """Подключение и курсор"""
         self.connection = connection
         self.cursor = cursor
+        self.DATE_FORMAT = DATE_FORMAT
 
     # === GET ===
-    @logger.catch
+    @ logger.catch
     def get_by_user_id(self, user_id):
         return self.__get('user_id', user_id)
 
-    @logger.catch
+    @ logger.catch
     def get_by_match_id(self, match_id):
         return self.__get('match_id', match_id)
 
-    @logger.catch
+    @ logger.catch
     def __get(self, value_key, value):
         if (type(value) == str):
             value = '"' + value + '"'
@@ -257,7 +261,7 @@ class Matchs():
 
         return self.__transform_data_items_to_dicts(data)
 
-    @logger.catch
+    @ logger.catch
     def __transform_data_items_to_dicts(self, data):
         result = []
         for item in data:
@@ -265,7 +269,7 @@ class Matchs():
                 "id": item[0],
                 "user_id": item[1],
                 "match_id": item[2],
-                "date": datetime.strptime(item[3], "%d/%m/%Y %H:%M:%S"),
+                "date": datetime.strptime(item[3], self.DATE_FORMAT),
                 "champion": item[4],
                 "kills": item[5],
                 "deaths": item[6],
@@ -274,21 +278,21 @@ class Matchs():
         return result
 
     # === ADD ===
-    @logger.catch
+    @ logger.catch
     def add(self, user_id, match_id, date, champion, kills, deaths, assists):
 
         if (type(match_id) == str):
             match_id = '"' + match_id + '"'
 
         if (type(date) == datetime):
-            date = datetime.strftime(date, "%d/%m/%Y %H:%M:%S")
+            date = datetime.strftime(date, self.DATE_FORMAT)
 
         date = '"' + date + '"'
 
         if (type(champion) == str):
             champion = '"' + champion + '"'
 
-        sql = f'''INSERT INTO matchs(user_id, match_id, date, champion, kills, deaths, assists) 
+        sql = f'''INSERT INTO matchs(user_id, match_id, date, champion, kills, deaths, assists)
                 VALUES ({user_id}, {match_id}, {date}, {champion}, {kills}, {deaths}, {assists})'''
 
         with self.connection:

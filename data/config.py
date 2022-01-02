@@ -11,3 +11,5 @@ IP = env.str("ip")
 CHAT = env.str("CHAT")
 RIOT_API = env.str("RIOT_API")
 RIOT_LOCALE = env.str("RIOT_LOCALE")
+
+DATE_FORMAT = "%d.%m.%y %H:%M"

@@ -1,6 +1,7 @@
 from environs import Env
 
-# Теперь используем вместо библиотеки python-dotenv библиотеку environs
+VERSION = '0.1.0'
+
 env = Env()
 env.read_env()
 

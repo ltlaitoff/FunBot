@@ -7,6 +7,8 @@ async def update_user_mathes(tg_id, chat_id, return_type='tg'):
     user_info = database.users.get_by_tg_id(tg_id)
     user_id = user_info.get('id')
     puuid = user_info.get('lol_puuid')
+    coef = user_info.get('coefficient')
+    pull_ups = user_info.get('pull_ups')
 
     user_database_mathes = database.matchs.get_by_user_id(user_id)
     user_api_mathes = api.get_user_matchs_list(puuid)
@@ -31,12 +33,12 @@ async def update_user_mathes(tg_id, chat_id, return_type='tg'):
         matches.append([*match_data.values()])
 
     if (return_type == 'all'):
-        return create_matches_message(matches, return_type)
+        return create_matches_message(matches, return_type, coef, pull_ups)
 
-    await dp.bot.send_message(chat_id, create_matches_message(matches))
+    await dp.bot.send_message(chat_id, create_matches_message(matches, coef, pull_ups))
 
 
-def create_matches_message(matches, return_type):
+def create_matches_message(matches, return_type, coef, pull_ups):
     if (len(matches) == 0):
         return ''
 
@@ -45,10 +47,10 @@ def create_matches_message(matches, return_type):
         message = 'Matches(date, champion, KDA):\n'
 
     for item in matches:
-        message += transfrom_to_send_user(*item)
+        message += transfrom_to_send_user(*item, coef, pull_ups)
 
     return message
 
 
-def transfrom_to_send_user(date, champion, kills, deaths, assists):
-    return f'{date}, {champion} -> {kills} | {deaths} | {assists}\n'
+def transfrom_to_send_user(date, champion, kills, deaths, assists, coef, pull_ups):
+    return f'{date}, {champion} -> {kills} | {deaths} | {assists} => {pull_ups} + {deaths} * {coef} = {pull_ups + deaths * coef}\n'

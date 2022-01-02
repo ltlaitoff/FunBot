@@ -5,8 +5,9 @@ from datetime import datetime
 
 class RIOT_API:
     def __init__(self, config):
-        self.API_KEY = config.RIOT_API
-        self.LOCALE = config.RIOT_LOCALE
+        self.config = config
+        self.API_KEY = self.config.RIOT_API
+        self.LOCALE = self.config.RIOT_LOCALE
 
     def get_user_info_by_name(self, name):
         user_info = requests.get(
@@ -31,7 +32,7 @@ class RIOT_API:
     def __match_info_structuring(self, math_json, puuid):
         result = {}
         result["date"] = datetime.fromtimestamp(math_json['info']['gameCreation'] / 1000).strftime(
-            "%d/%m/%Y %H:%M:%S")
+            self.config.DATE_FORMAT)
 
         for item in math_json['info']['participants']:
             if (item['puuid'] == puuid):

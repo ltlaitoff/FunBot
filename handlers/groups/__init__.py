@@ -7,3 +7,4 @@ from . import did
 from . import history
 from . import matches
 from . import show_pull_ups
+from . import version

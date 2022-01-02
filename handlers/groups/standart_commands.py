@@ -4,20 +4,17 @@ from aiogram.dispatcher.filters.builtin import CommandHelp, Command
 
 from loader import dp
 from filters import IsGroup
+from data.messages_form import get_start_message, get_help_message
 
 
 @dp.message_handler(IsGroup(), CommandHelp())
 async def bot_help(message: types.Message):
-    text = ("Список команд: ",
-            "/start - Начать диалог",
-            "/help - Получить справку")
-
-    await message.answer("\n".join(text))
+    await message.answer(get_help_message())
 
 
 @dp.message_handler(IsGroup(), CommandStart())
 async def bot_start(message: types.Message):
-    await message.answer(f"Привет, {message.from_user.full_name}!")
+    await message.answer(get_start_message(message.from_user.full_name))
 
 
 @dp.message_handler(IsGroup(), Command('message'))

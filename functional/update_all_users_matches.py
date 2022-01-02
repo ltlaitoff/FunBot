@@ -20,7 +20,7 @@ async def update_all_users_matches(chat_id, call_type="user"):
     for index in range(len(result_arr_text)):
         result += f'{result_arr_names[index]}:\n'
         result += result_arr_text[index]
-        result += '\n\n'
+        result += '\n'
 
     await dp.bot.send_message(chat_id, result)
 

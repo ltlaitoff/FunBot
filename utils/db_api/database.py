@@ -205,21 +205,22 @@ class History():
                 "value": item[3],
                 "current_coef": item[4],
                 "result_pull_ups": item[5],
-                "global_pull_ups": item[6]
+                "global_pull_ups": item[6],
+                "record_type": item[7]
             })
         return result
 
     # === ADD ===
     @logger.catch
-    def add(self, user_id, date, value, current_coef, result_pull_ups, global_pull_ups):
+    def add(self, user_id, date, value, current_coef, result_pull_ups, global_pull_ups, record_type="GAME"):
 
         if (type(date) == datetime):
             date = datetime.strftime(date, "%d/%m/%Y %H:%M:%S")
 
         date = '"' + date + '"'
 
-        sql = f'''INSERT INTO history(user_id, date, value, current_coef, result_pull_ups, global_pull_ups) 
-        VALUES ({user_id}, {date}, {value}, {current_coef}, {result_pull_ups}, {global_pull_ups})'''
+        sql = f'''INSERT INTO history(user_id, date, value, current_coef, result_pull_ups, global_pull_ups, record_type) 
+        VALUES ({user_id}, {date}, {value}, {current_coef}, {result_pull_ups}, {global_pull_ups}, {record_type})'''
 
         with self.connection:
             self.cursor.execute(sql)

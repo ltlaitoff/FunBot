@@ -22,11 +22,15 @@ def get_help_message():
 
 def get_history_message(history_list):
     def __create_history_string(item):
+        record_type = item.get('record_type')
         value = item.get("value")
         coef = item.get("current_coef")
         result_pull_ups = item.get("result_pull_ups")
         global_pull_ups = item.get("global_pull_ups")
-        return f'{item.get("date")} | {value} * {coef} = {global_pull_ups - value * coef} + {result_pull_ups} = {global_pull_ups}'
+        if (record_type == "GAME"):
+            return f'GAME | {item.get("date")} | {value} * {coef} = {global_pull_ups - value * coef} + {result_pull_ups} = {global_pull_ups}'
+        if (record_type == "USER"):
+            return f'USER | {item.get("date")} | {global_pull_ups + value} - {value} = {global_pull_ups}'
 
     if (len(history_list) == 0):
         return 'История пустая'

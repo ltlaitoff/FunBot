@@ -44,3 +44,14 @@ def get_history_message(history_list):
         message += __create_history_string(item) + '\n'
 
     return message
+
+
+def my_stats_message(user_info):
+    text = (
+        f"Tg name: {user_info.get('tg_name')}\n"
+        f"Lol name: {user_info.get('lol_name')}\n"
+        f"Pull ups: {user_info.get('pull_ups')}\n"
+        f"Coef: {user_info.get('coefficient')}"
+    )
+
+    return text

@@ -10,3 +10,8 @@ from functional.history import history
 @dp.message_handler(IsGroup(), Command("history"))
 async def history_handler(message: types.Message):
     await message.answer(history(message.from_user.id))
+
+
+@dp.message_handler(IsGroup(), Command("history_all"))
+async def history_handler(message: types.Message):
+    await message.answer(history(message.from_user.id, 'all'))

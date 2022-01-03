@@ -16,5 +16,11 @@ async def set_default_commands(dp):
             types.BotCommand("matches", "Посмотреть матчи"),
             types.BotCommand("show_pull_ups", "Посмотреть подтягивания"),
             types.BotCommand("version", "Текущая версия бота"),
+            types.BotCommand("add", "Добавить подтягивания"),
+            types.BotCommand("history_all", "Полная история"),
+            types.BotCommand("matches_all", "Полная история матчей"),
+            types.BotCommand("set_coef", "Установка коофициента"),
+            types.BotCommand("my_stats", "Просмотр статистики"),
+
         ]
     )

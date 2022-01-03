@@ -30,9 +30,11 @@ def get_history_message(history_list):
         global_pull_ups = item.get("global_pull_ups")
 
         if (record_type == "GAME"):
-            return f'GAME | {date} | {value} * {coef} = {global_pull_ups - value * coef} + {result_pull_ups} = {global_pull_ups}'
-        if (record_type == "USER"):
-            return f'USER | {date} | {global_pull_ups + value} - {value} = {global_pull_ups}'
+            return f'GAME | {date} | {global_pull_ups - value * coef} + {value} * {coef}({result_pull_ups}) = {global_pull_ups}'
+        if (record_type == "USER_ADD"):
+            return f'ADD | {date} | {global_pull_ups - value} + {value} = {global_pull_ups}'
+        if (record_type == "USER_DID"):
+            return f'DID | {date} | {global_pull_ups + value} - {value} = {global_pull_ups}'
 
     if (len(history_list) == 0):
         return 'История пустая'
@@ -44,3 +46,14 @@ def get_history_message(history_list):
         message += __create_history_string(item) + '\n'
 
     return message
+
+
+def my_stats_message(user_info):
+    text = (
+        f"Tg name: {user_info.get('tg_name')}\n"
+        f"Lol name: {user_info.get('lol_name')}\n"
+        f"Pull ups: {user_info.get('pull_ups')}\n"
+        f"Coef: {user_info.get('coefficient')}"
+    )
+
+    return text

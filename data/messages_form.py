@@ -31,8 +31,10 @@ def get_history_message(history_list):
 
         if (record_type == "GAME"):
             return f'GAME | {date} | {global_pull_ups - value * coef} + {value} * {coef}({result_pull_ups}) = {global_pull_ups}'
-        if (record_type == "USER"):
-            return f'USER | {date} | {global_pull_ups + value} - {value} = {global_pull_ups}'
+        if (record_type == "USER_ADD"):
+            return f'ADD | {date} | {global_pull_ups - value} + {value} = {global_pull_ups}'
+        if (record_type == "USER_DID"):
+            return f'DID | {date} | {global_pull_ups + value} - {value} = {global_pull_ups}'
 
     if (len(history_list) == 0):
         return 'История пустая'

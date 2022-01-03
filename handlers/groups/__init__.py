@@ -10,3 +10,4 @@ from . import show_pull_ups
 from . import version
 from . import set_coef
 from . import my_stats
+from . import add

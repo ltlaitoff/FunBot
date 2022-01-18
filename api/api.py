@@ -20,7 +20,7 @@ class RIOT_API:
 
     def get_user_matchs_list(self, puuid):
         return requests.get(
-            f'https://{self.LOCALE}.api.riotgames.com/lol/match/v5/matches/by-puuid/{puuid}/ids?start=0&count=50&api_key={self.API_KEY}').json()
+            f'https://{self.LOCALE}.api.riotgames.com/lol/match/v5/matches/by-puuid/{puuid}/ids?start=0&count=100&api_key={self.API_KEY}').json()
 
     def get_match_info(self, match_id, puuid):
         return self.__match_info_structuring(

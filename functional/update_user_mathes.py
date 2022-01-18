@@ -3,54 +3,70 @@ from loader import database, logger, dp, api
 from functional.add_new_record_in_history import add_new_record_in_history
 
 
+def getUserLastMatch(user_id, api_last_match_id):
+    user_database_mathes = database.matchs.get_by_user_id(user_id)
+
+    if (user_database_mathes != None):
+        return user_database_mathes[-1].get('match_id')
+    return api_last_match_id
+
+
 async def update_user_mathes(tg_id, chat_id, return_type='tg'):
     user_info = database.users.get_by_tg_id(tg_id)
     user_id = user_info.get('id')
     puuid = user_info.get('lol_puuid')
     coef = user_info.get('coefficient')
-    pull_ups = user_info.get('pull_ups')
 
-    user_database_mathes = database.matchs.get_by_user_id(user_id)
     user_api_mathes = api.get_user_matchs_list(puuid)
-
-    if (user_database_mathes != None):
-        last_match_id = user_database_mathes[-1].get('match_id')
-    else:
-        last_match_id = user_api_mathes[1]
+    last_match_id = getUserLastMatch(user_id, user_api_mathes[0])
 
     matches = []
 
-    for match_id in user_api_mathes:
-        if (match_id == last_match_id):
-            break
+    last_match_index = user_api_mathes.index(last_match_id)
+    new_matches = user_api_mathes[:last_match_index][::-1]
 
+    last_global_pull_ups = user_info.get('pull_ups')
+
+    for match_id in new_matches:
         match_data = api.get_match_info(match_id, puuid)
         database.matchs.add(user_id, match_id, *match_data.values())
 
-        add_new_record_in_history(
-            user_id, match_data.get('date'), match_data.get('deaths'))
+        match_data['pull_ups'] = add_new_record_in_history(
+            user_id, match_data.get('date'), match_data.get('deaths'), last_global_pull_ups)
 
-        matches.append([*match_data.values()])
+        last_global_pull_ups = match_data['pull_ups']
 
+        matches.append(match_data)
+
+    matches_message = create_matches_message(matches, coef)
     if (return_type == 'all'):
-        return create_matches_message(matches, return_type, coef, pull_ups)
+        return matches_message
 
-    await dp.bot.send_message(chat_id, create_matches_message(matches, coef, pull_ups))
+    matches_message = 'Matches(date, champion, KDA):\n' + matches_message
+
+    await dp.bot.send_message(chat_id, matches_message)
 
 
-def create_matches_message(matches, return_type, coef, pull_ups):
+def create_matches_message(matches, coef):
     if (len(matches) == 0):
         return ''
 
     message = ''
-    if (return_type != 'all'):
-        message = 'Matches(date, champion, KDA):\n'
 
     for item in matches:
-        message += transfrom_to_send_user(*item, coef, pull_ups)
+        item['coef'] = coef
+        message += transfrom_to_send_user(item)
 
     return message
 
 
-def transfrom_to_send_user(date, champion, kills, deaths, assists, coef, pull_ups):
-    return f'{date}, {champion} -> {kills} | {deaths} | {assists} => {pull_ups} + {deaths} * {coef} = {pull_ups + deaths * coef}\n'
+def transfrom_to_send_user(value):
+    date = value.get('date')
+    champion = value.get('champion')
+    kills = value.get('kills')
+    deaths = value.get('deaths')
+    assists = value.get('assists')
+    pull_ups = value.get('pull_ups')
+    coef = value.get('coef')
+
+    return f'{date}, {champion} -> {kills} | {deaths} | {assists} => {pull_ups - deaths * coef} + {deaths} * {coef} = {pull_ups}\n'

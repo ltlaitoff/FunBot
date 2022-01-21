@@ -11,3 +11,4 @@ from . import version
 from . import set_coef
 from . import my_stats
 from . import add
+from . import update_all_users_puuid

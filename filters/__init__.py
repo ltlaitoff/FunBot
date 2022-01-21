@@ -3,6 +3,7 @@ from loguru import logger
 
 from .chat_filters import IsGroup
 from .chat_filters import IsPrivate
+from .admin import IsAdmin
 
 
 def setup(dp: Dispatcher):
@@ -10,3 +11,4 @@ def setup(dp: Dispatcher):
 
     dp.filters_factory.bind(IsGroup)
     dp.filters_factory.bind(IsPrivate)
+    dp.filters_factory.bind(IsAdmin)

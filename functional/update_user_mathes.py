@@ -11,6 +11,7 @@ def getUserLastMatch(user_id, api_last_match_id):
     return api_last_match_id
 
 
+@logger.catch
 async def update_user_mathes(tg_id, chat_id, return_type='tg'):
     user_info = database.users.get_by_tg_id(tg_id)
     user_id = user_info.get('id')

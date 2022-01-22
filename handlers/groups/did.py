@@ -6,11 +6,17 @@ from filters import IsGroup
 
 from functional.pull_ups_controller import pull_ups_controller
 
+def checkOnNumber(value):
+    try:
+        int(value)
+        return True
+    except:
+        return False 
 
 @dp.message_handler(IsGroup(), Command("did"))
 async def did_handler(message: types.Message):
     args = message.get_args()
-    if (args == '' or args.isdigit() == False):
+    if (args == '' or checkOnNumber(args) == False):
         await message.reply('Введите корректное значение')
         return
 

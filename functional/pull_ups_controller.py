@@ -17,9 +17,6 @@ def pull_ups_controller(tg_id, value, command_type):
     elif (command_type == 'add'):
         global_pull_ups = user_info.get('pull_ups') + result_pull_ups
 
-    if (global_pull_ups < 0):
-        global_pull_ups = 0
-
     database.history.add(user_id, date, value, current_coef,
                          result_pull_ups, global_pull_ups, f'USER_{command_type.upper()}')
     database.users.update_pull_ups(user_id, global_pull_ups)

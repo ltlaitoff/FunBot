@@ -1,5 +1,7 @@
 from environs import Env
 
+DEV = False
+
 VERSION = '0.3.1'
 CHANGES = f'''Изменения в {VERSION}:
 - Добавленна поддержка нового API ключа
@@ -9,7 +11,12 @@ CHANGES = f'''Изменения в {VERSION}:
 env = Env()
 env.read_env()
 
-BOT_TOKEN = env.str("BOT_TOKEN")
+
+if (DEV):
+  BOT_TOKEN = env.str("BOT_TOKEN_DEV")
+else:
+  BOT_TOKEN = env.str("BOT_TOKEN")
+
 ADMINS = env.list("ADMINS")
 IP = env.str("ip")
 CHAT = env.str("CHAT")

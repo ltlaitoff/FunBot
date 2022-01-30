@@ -2,6 +2,7 @@ from loader import database, logger, dp, api
 from datetime import datetime
 
 
+@logger.catch
 def matches(tg_id, message_type='standart'):
     user_info = database.users.get_by_tg_id(tg_id)
     user_id = user_info.get('id')
@@ -25,5 +26,6 @@ def matches(tg_id, message_type='standart'):
     return message
 
 
+@logger.catch
 def create_matches_string(item):
     return f'{item.get("date")} | {item.get("champion")} | {item.get("kills")} | {item.get("deaths")} | {item.get("assists")}'

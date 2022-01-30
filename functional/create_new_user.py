@@ -1,6 +1,7 @@
 from loader import database, logger
 
 
+@logger.catch
 def create_new_user(tg_id, tg_name):
     user = database.users.get_by_tg_id(tg_id)
 

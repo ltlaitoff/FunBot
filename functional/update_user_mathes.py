@@ -3,6 +3,7 @@ from loader import database, logger, dp, api
 from functional.add_new_record_in_history import add_new_record_in_history
 
 
+@logger.catch
 def getUserLastMatch(user_id, api_last_match_id):
     user_database_mathes = database.matchs.get_by_user_id(user_id)
 
@@ -48,6 +49,7 @@ async def update_user_mathes(tg_id, chat_id, return_type='tg'):
     await dp.bot.send_message(chat_id, matches_message)
 
 
+@logger.catch
 def create_matches_message(matches, coef):
     if (len(matches) == 0):
         return ''
@@ -61,6 +63,7 @@ def create_matches_message(matches, coef):
     return message
 
 
+@logger.catch
 def transfrom_to_send_user(value):
     date = value.get('date')
     champion = value.get('champion')

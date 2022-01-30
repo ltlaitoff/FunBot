@@ -10,9 +10,9 @@ env.read_env()
 
 
 if (DEV):
-  BOT_TOKEN = env.str("BOT_TOKEN_DEV")
+    BOT_TOKEN = env.str("BOT_TOKEN_DEV")
 else:
-  BOT_TOKEN = env.str("BOT_TOKEN")
+    BOT_TOKEN = env.str("BOT_TOKEN")
 
 ADMINS = env.list("ADMINS")
 IP = env.str("ip")

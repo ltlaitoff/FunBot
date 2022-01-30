@@ -3,6 +3,7 @@ from loader import database, logger, dp
 from functional.update_user_mathes import update_user_mathes
 
 
+@logger.catch
 async def update_all_users_matches(chat_id, call_type="user"):
     all_users = database.users.get_all()
 
@@ -26,6 +27,7 @@ async def update_all_users_matches(chat_id, call_type="user"):
     await dp.bot.send_message(chat_id, result)
 
 
+@logger.catch
 def check_array_on_void(arr):
     for i in arr:
         if i != '':

@@ -3,6 +3,7 @@ from loader import database, logger, api
 from functional.update_user_mathes import update_user_mathes
 
 
+@logger.catch
 def connect_lol_account(tg_id, text):
     user = database.users.get_by_tg_id(tg_id)
 

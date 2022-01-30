@@ -4,6 +4,8 @@ from datetime import datetime
 
 from functional.add_new_record_in_history import add_new_record_in_history
 
+
+@logger.catch
 def input_validation(value, current_command_type):
     if (value >= 0):
         return [value, current_command_type]
@@ -15,18 +17,22 @@ def input_validation(value, current_command_type):
     }
 
     return [value_abs, change_ways[current_command_type]]
-    
+
+
+@logger.catch
 def checkOnNumber(value):
     try:
         int(value)
         return True
     except:
-        return False 
+        return False
 
+
+@logger.catch
 def pull_ups_controller(tg_id, args, command_type):
     if (checkOnNumber(args) == False):
         return 'Введите корректное значение'
-    
+
     value, command_type = input_validation(int(args), command_type)
 
     user_info = database.users.get_by_tg_id(tg_id)

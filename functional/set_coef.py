@@ -1,6 +1,7 @@
 from loader import database, logger, dp, api
 
 
+@logger.catch
 def set_coef(tg_id, value):
     user_info = database.users.get_by_tg_id(tg_id)
     user_id = user_info.get('id')

@@ -1,13 +1,13 @@
 from aiogram import types
-from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Command
 
-from loader import dp, database
+from loader import dp, logger
 from filters import IsGroup
 
 from functional.set_coef import set_coef
 
 
+@logger.catch
 @dp.message_handler(IsGroup(), Command("set_coef"))
 async def set_coef_handler(message: types.Message):
     args = message.get_args()

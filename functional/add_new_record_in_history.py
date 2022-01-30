@@ -1,6 +1,7 @@
 from loader import database, logger
 
 
+@logger.catch
 def add_new_record_in_history(user_id, date, value, last_global_pull_ups=-1):
     user_info = database.users.get_by_user_id(user_id)
 

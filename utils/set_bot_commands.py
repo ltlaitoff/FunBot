@@ -1,6 +1,8 @@
+from loguru import logger
 from aiogram import types
 
 
+@logger.catch
 async def set_default_commands(dp):
     await dp.bot.set_my_commands(
         [

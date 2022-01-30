@@ -1,10 +1,12 @@
 from loader import config, logger
 
 
+@logger.catch
 def get_start_message(full_name):
     return f'Привет, {full_name}!\nТекущая версия бота: {config.VERSION}'
 
 
+@logger.catch
 def get_help_message():
     text = ("/start - Запустить бота",
             "/help - Вывести справку",
@@ -20,6 +22,7 @@ def get_help_message():
     return "\n".join(text)
 
 
+@logger.catch
 def get_history_message(history_list):
     def __create_history_string(item):
         date = item.get("date").strftime(config.DATE_FORMAT)
@@ -48,6 +51,7 @@ def get_history_message(history_list):
     return message
 
 
+@logger.catch
 def my_stats_message(user_info):
     text = (
         f"Tg name: {user_info.get('tg_name')}\n"

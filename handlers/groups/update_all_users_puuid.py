@@ -1,9 +1,8 @@
 from filters import IsAdmin
 from functional.update_all_users_puuid import update_all_users_puuid
 from aiogram import types
-from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Command
-from loader import dp, database, logger
+from loader import dp, logger
 
 
 @logger.catch

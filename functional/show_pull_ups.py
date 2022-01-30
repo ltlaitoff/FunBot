@@ -2,6 +2,7 @@ import data
 from loader import database, logger, dp, api
 
 
+@logger.catch
 def show_pull_ups():
     users = database.users.get_all()
     message = ''

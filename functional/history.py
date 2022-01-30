@@ -4,6 +4,7 @@ from datetime import datetime
 from data.messages_form import get_history_message
 
 
+@logger.catch
 def history(tg_id, type_message='standart'):
     user_info = database.users.get_by_tg_id(tg_id)
     user_id = user_info.get('id')

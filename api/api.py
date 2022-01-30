@@ -3,12 +3,15 @@ from loguru import logger
 from datetime import datetime
 
 
+@logger.catch
 class RIOT_API:
+    @logger.catch
     def __init__(self, config):
         self.config = config
         self.API_KEY = self.config.RIOT_API
         self.LOCALE = self.config.RIOT_LOCALE
 
+    @logger.catch
     def get_user_info_by_name(self, name):
         user_info = requests.get(
             f'https://ru.api.riotgames.com/lol/summoner/v4/summoners/by-name/{name}?api_key={self.API_KEY}').json()
@@ -18,10 +21,12 @@ class RIOT_API:
 
         return user_info
 
+    @logger.catch
     def get_user_matchs_list(self, puuid):
         return requests.get(
             f'https://{self.LOCALE}.api.riotgames.com/lol/match/v5/matches/by-puuid/{puuid}/ids?start=0&count=100&api_key={self.API_KEY}').json()
 
+    @logger.catch
     def get_match_info(self, match_id, puuid):
         return self.__match_info_structuring(
             requests.get(
@@ -29,6 +34,7 @@ class RIOT_API:
             puuid
         )
 
+    @logger.catch
     def __match_info_structuring(self, math_json, puuid):
         result = {}
         result["date"] = datetime.fromtimestamp(math_json['info']['gameCreation'] / 1000).strftime(

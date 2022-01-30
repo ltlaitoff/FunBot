@@ -1,4 +1,4 @@
-import logging
+from loguru import logger
 from aiogram.utils.exceptions import (TelegramAPIError,
                                       MessageNotModified,
                                       CantParseEntities)
@@ -7,6 +7,7 @@ from aiogram.utils.exceptions import (TelegramAPIError,
 from loader import dp
 
 
+@logger.catch
 @dp.errors_handler()
 async def errors_handler(update, exception):
     """
@@ -14,24 +15,23 @@ async def errors_handler(update, exception):
     :param dispatcher:
     :param update:
     :param exception:
-    :return: stdout logging
+    :return: stdout logger
     """
 
-
     if isinstance(exception, MessageNotModified):
-        logging.exception('Message is not modified')
+        logger.exception('Message is not modified')
         # do something here?
         return True
-      
+
     if isinstance(exception, CantParseEntities):
         # or here
-        logging.exception(f'CantParseEntities: {exception} \nUpdate: {update}')
+        logger.exception(f'CantParseEntities: {exception} \nUpdate: {update}')
         return True
-      
+
     #  MUST BE THE  LAST CONDITION (ЭТО УСЛОВИЕ ВСЕГДА ДОЛЖНО БЫТЬ В КОНЦЕ)
     if isinstance(exception, TelegramAPIError):
-        logging.exception(f'TelegramAPIError: {exception} \nUpdate: {update}')
+        logger.exception(f'TelegramAPIError: {exception} \nUpdate: {update}')
         return True
-    
+
     # At least you have tried.
-    logging.exception(f'Update: {update} \n{exception}')
+    logger.exception(f'Update: {update} \n{exception}')

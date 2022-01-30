@@ -1,6 +1,8 @@
+from loguru import logger
 from aiogram import types
 
 
+@logger.catch
 async def set_default_commands(dp):
     await dp.bot.set_my_commands(
         [
@@ -21,6 +23,7 @@ async def set_default_commands(dp):
             types.BotCommand("matches_all", "Полная история матчей"),
             types.BotCommand("set_coef", "Установка коофициента"),
             types.BotCommand("my_stats", "Просмотр статистики"),
+            types.BotCommand("admin_commands", 'Команды администратора')
 
         ]
     )

@@ -1,12 +1,9 @@
 from environs import Env
 
-DEV = False
+DEV = True
 
 VERSION = '0.3.1'
-CHANGES = f'''Изменения в {VERSION}:
-- Добавленна поддержка нового API ключа
-- Исправленны некоторые баги
-'''
+CHANGES = f''''''
 
 env = Env()
 env.read_env()

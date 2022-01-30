@@ -10,8 +10,5 @@ from functional.pull_ups_controller import pull_ups_controller
 @dp.message_handler(IsGroup(), Command("did"))
 async def did_handler(message: types.Message):
     args = message.get_args()
-    if (args == '' or args.isdigit() == False):
-        await message.reply('Введите корректное значение')
-        return
 
-    await message.answer(pull_ups_controller(message.from_user.id, int(args), 'did'))
+    await message.answer(pull_ups_controller(message.from_user.id, args, 'did'))

@@ -4,8 +4,31 @@ from datetime import datetime
 
 from functional.add_new_record_in_history import add_new_record_in_history
 
+def input_validation(value, current_command_type):
+    if (value >= 0):
+        return [value, current_command_type]
 
-def pull_ups_controller(tg_id, value, command_type):
+    value_abs = abs(value)
+    change_ways = {
+        'did': 'add',
+        'add': 'did'
+    }
+
+    return [value_abs, change_ways[current_command_type]]
+    
+def checkOnNumber(value):
+    try:
+        int(value)
+        return True
+    except:
+        return False 
+
+def pull_ups_controller(tg_id, args, command_type):
+    if (checkOnNumber(args) == False):
+        return 'Введите корректное значение'
+    
+    value, command_type = input_validation(int(args), command_type)
+
     user_info = database.users.get_by_tg_id(tg_id)
     user_id = user_info.get('id')
     date = datetime.now()
@@ -16,9 +39,6 @@ def pull_ups_controller(tg_id, value, command_type):
         global_pull_ups = user_info.get('pull_ups') - result_pull_ups
     elif (command_type == 'add'):
         global_pull_ups = user_info.get('pull_ups') + result_pull_ups
-
-    if (global_pull_ups < 0):
-        global_pull_ups = 0
 
     database.history.add(user_id, date, value, current_coef,
                          result_pull_ups, global_pull_ups, f'USER_{command_type.upper()}')

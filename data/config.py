@@ -1,6 +1,6 @@
 from environs import Env
 
-DEV = True
+DEV = False
 
 VERSION = '0.3.2'
 CHANGES = f'''- Изменён функционал did и add. Теперь при did -1 будет выполнятся add 1

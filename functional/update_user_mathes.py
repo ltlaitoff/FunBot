@@ -20,7 +20,7 @@ async def update_user_mathes(tg_id, chat_id, return_type='tg'):
     coef = user_info.get('coefficient')
 
     user_api_mathes = api.get_user_matchs_list(puuid)
-    last_match_id = getUserLastMatch(user_id, user_api_mathes[0])
+    last_match_id = getUserLastMatch(user_id, user_api_mathes[len(user_api_mathes) - 1])
 
     matches = []
 

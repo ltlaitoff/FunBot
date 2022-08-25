@@ -1,31 +1,13 @@
 from loader import database, logger, dp, api
 from datetime import datetime
-
+from functional.get_matches_table import get_matches_table
 
 @logger.catch
-def matches(tg_id, message_type='standart'):
+def matches(tg_id):
     user_info = database.users.get_by_tg_id(tg_id)
-    user_id = user_info.get('id')
-
-    matches_list = database.matchs.get_by_user_id(user_id)
+    matches_list = database.matchs.get_by_user_id(user_info.get('id'))[::-1][:20]
 
     if (len(matches_list) == 0):
-        return 'История каток пустая'
+        return 'Not found'
 
-    message = 'История каток:\n'
-    message += 'Дата | Чемпион | Килы | Смерти | Ассисты\n'
-
-    if (message_type == 'all'):
-        arr_on_message = matches_list
-    else:
-        arr_on_message = matches_list[::-1][:10][::-1]
-
-    for item in arr_on_message:
-        message += create_matches_string(item) + '\n'
-
-    return message
-
-
-@logger.catch
-def create_matches_string(item):
-    return f'{item.get("date")} | {item.get("champion")} | {item.get("kills")} | {item.get("deaths")} | {item.get("assists")}'
+    return get_matches_table(matches_list, user_info, pull_ups = False, coef = False)

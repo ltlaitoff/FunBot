@@ -10,10 +10,4 @@ from functional.matches import matches
 @logger.catch
 @dp.message_handler(IsGroup(), Command("matches"))
 async def matches_handler(message: types.Message):
-    await message.answer(matches(message.from_user.id))
-
-
-@logger.catch
-@dp.message_handler(IsGroup(), Command("matches_all"))
-async def matches_handler(message: types.Message):
-    await message.answer(matches(message.from_user.id, 'all'))
+    await message.answer(f'```\n{matches(message.from_user.id)}```', parse_mode="MarkdownV2")

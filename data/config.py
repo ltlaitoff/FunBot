@@ -2,11 +2,8 @@ from environs import Env
 
 DEV = False
 
-VERSION = '0.3.2'
-CHANGES = f'''- Изменён функционал did и add. Теперь при did -1 будет выполнятся add 1
-- Добавленны команды администратора
-- Добавленны бэкапы базы данных
-- Fix bugs'''
+VERSION = '1.0.0'
+CHANGES = f'''- Измененны таблички обновления вывода истории матчей'''
 
 env = Env()
 env.read_env()

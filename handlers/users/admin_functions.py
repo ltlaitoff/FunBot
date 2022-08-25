@@ -1,7 +1,6 @@
 from loader import dp, logger, config, bot
 from aiogram.dispatcher.filters import Command
 from aiogram import types
-
 from filters import IsAdmin
 
 

@@ -40,11 +40,16 @@ class RIOT_API:
         result["date"] = datetime.fromtimestamp(math_json['info']['gameCreation'] / 1000).strftime(
             self.config.DATE_FORMAT)
 
+
+        result['queueId'] = math_json['info']['queueId']
+
         for item in math_json['info']['participants']:
             if (item['puuid'] == puuid):
                 result["champion"] = item["championName"]
                 result["kills"] = item["kills"]
                 result["deaths"] = item["deaths"]
                 result["assists"] = item["assists"]
+                result["teamPosition"] = item["teamPosition"]
+                result["win"] = item["win"]
 
         return result

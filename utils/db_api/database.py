@@ -264,36 +264,38 @@ class Matchs():
     @ logger.catch
     def __transform_data_items_to_dicts(self, data):
         result = []
-        for item in data:
+        for item in data:   
             result.append({
                 "id": item[0],
                 "user_id": item[1],
                 "match_id": item[2],
                 "date": datetime.strptime(item[3], self.DATE_FORMAT),
-                "champion": item[4],
-                "kills": item[5],
-                "deaths": item[6],
-                "assists": item[7]
+                "queueId": item[4],
+                "champion": item[5],
+                "kills": item[6],
+                "deaths": item[7],
+                "assists": item[8],
+                "teamPosition": item[9],
+                "win": item[10]
             })
         return result
 
     # === ADD ===
     @ logger.catch
-    def add(self, user_id, match_id, date, champion, kills, deaths, assists):
-
+    def add(self, user_id, match_id, match_data):
         if (type(match_id) == str):
             match_id = '"' + match_id + '"'
 
+        date = match_data['date']
         if (type(date) == datetime):
             date = datetime.strftime(date, self.DATE_FORMAT)
-
         date = '"' + date + '"'
 
-        if (type(champion) == str):
-            champion = '"' + champion + '"'
+        champion = '"' + match_data['champion'] + '"'
+        teamPosition = '"' + match_data['teamPosition'] + '"'
 
-        sql = f'''INSERT INTO matchs(user_id, match_id, date, champion, kills, deaths, assists)
-                VALUES ({user_id}, {match_id}, {date}, {champion}, {kills}, {deaths}, {assists})'''
+        sql = f'''INSERT INTO matchs(user_id, match_id, date, queueId, champion, kills, deaths, assists, teamPosition, win) VALUES ({user_id}, {match_id}, {date}, {match_data['queueId']}, {champion}, {match_data['kills']}, {match_data['deaths']}, {match_data['assists']}, {teamPosition}, {match_data['win']})'''
 
+        print(sql)
         with self.connection:
             self.cursor.execute(sql)

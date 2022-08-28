@@ -1,14 +1,16 @@
 from loader import database, logger, dp, api
 from prettytable import PrettyTable
+from data import config
+from datetime import datetime
 
 @logger.catch
 def getGameType(queueId):
     gameTypes = {
-        400: 'Normal Draft',
-        420: 'Ranked Solo',
-        440: 'Ranked Flex',
+        400: 'Normal',
+        420: 'SRanks',
+        440: 'GRanks',
         450: 'ARAM',
-        1400: 'Spellbook'
+        1400: 'Book'
     }
 
     try:
@@ -30,27 +32,24 @@ def get_matches_table(matches, user_info, pull_ups = True, coef = True):
     if (coef): params.append('Coef')
     if (pull_ups): params.append('Pull ups')
 
-    table = PrettyTable(params)
-
-    table.title = user_info['lol_name']
-
-    table.align['K'] = 'r'
-    table.align['D'] = 'r'
-    table.align['A'] = 'r'
-    table.align['Champ'] = 'l'
-    table.align['Role'] = 'l'
-    table.align['Game'] = 'l'
-
+    message = f'  {user_info["lol_name"]}\n'
     for match in matches:
         gameType = getGameType(match['queueId'])
         win = getWin(match['win'])  
+        
 
-        data = [match['date'], gameType, win, match['teamPosition'], match['champion'], match['kills'], match['deaths'], match['assists']]
+        date = ''
+        if (type(match['date']) == str):
+            date = datetime.strptime(match['date'], config.DATE_FORMAT).strftime('%d-%m')
+        else:
+            date = match['date'].strftime('%d/%m')
+            
+            
+        message += f'''{date} [{win}] {gameType}, {match['champion']}: {match['kills']} | {match['deaths']} | {match['assists']}'''
 
-        if coef: data.append(user_info['coefficient'])
-        if pull_ups: data.append(f'{match["pull_ups"]}(+{match["deaths"]})')
+        if pull_ups: message += f''' => {match["pull_ups"]}(+{match["deaths"]})'''
 
-        table.add_row(data)
+        message += '\n'
 
-    return table
+    return message
 

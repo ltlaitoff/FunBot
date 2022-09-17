@@ -47,7 +47,7 @@ def get_matches_table(matches, user_info, pull_ups = True, coef = True):
             
         message += f'''{date} [{win}] {gameType}, {match['champion']}: {match['kills']} | {match['deaths']} | {match['assists']}'''
 
-        if pull_ups: message += f''' => {match["pull_ups"]}(+{match["deaths"]})'''
+        if pull_ups: message += f''' => {match["pull_ups"]}(+{match["deaths"]} * {user_info.get('coefficient')})'''
 
         message += '\n'
 

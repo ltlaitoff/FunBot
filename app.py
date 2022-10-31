@@ -27,4 +27,4 @@ async def update_all_users_matches_loop():
 if __name__ == '__main__':
     loop = asyncio.get_event_loop()
     loop.create_task(update_all_users_matches_loop())
-    executor.start_polling(dp, on_startup=on_startup)
+    executor.start_polling(dp, on_startup=on_startup, skip_updates=False)

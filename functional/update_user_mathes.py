@@ -26,7 +26,11 @@ async def update_user_mathes(tg_id, chat_id, return_type='tg'):
 
     matches = []
 
-    last_match_index = user_api_mathes.index(last_match_id)
+    try:
+        last_match_index = user_api_mathes.index(last_match_id)
+    except ValueError:
+        last_match_index = len(user_api_mathes)
+    
     new_matches = user_api_mathes[:last_match_index][::-1]
     last_global_pull_ups = user_info.get('pull_ups')
     for match_id in new_matches:

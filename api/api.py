@@ -3,7 +3,6 @@ from loguru import logger
 from datetime import datetime
 
 
-@logger.catch
 class RIOT_API:
     @logger.catch
     def __init__(self, config):
